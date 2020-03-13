@@ -2,12 +2,15 @@ from abc import ABC, abstractmethod
 
 # Bridge -----------------------------
 
+
 class CatNameImplementation(ABC):
     pass
+
 
 class NamedCat(CatNameImplementation):
     def __init__(self, name):
         self.name = name
+
 
 class UnnamedCat(CatNameImplementation):
     def __init__(self):
@@ -32,12 +35,13 @@ class AbstractCat(ABC):
     def get_name(self):
         pass
 
+
 class Cat(AbstractCat):
     """
     Base abstract Cat interface realization
     """
 
-    def __init__(self, name_implementation: "helloo" = None):
+    def __init__(self, name_implementation: CatNameImplementation = None):
         self._name_implementation = name_implementation
 
     def eat(self):
@@ -51,6 +55,7 @@ class Cat(AbstractCat):
 
 # Decorators ---------------------------
 
+
 class CatDecorator(Cat):
     """
     Abstract decorator
@@ -63,9 +68,11 @@ class CatDecorator(Cat):
     def get_name(self):
         return self._component.get_name()
 
+
 class DomesticCatDecorator(CatDecorator):
     def play(self):
         print("Domestic Cat [{}] is playing!".format(self.get_name()))
+
 
 class KittenDecorator(DomesticCatDecorator):
     def play(self):
@@ -74,9 +81,11 @@ class KittenDecorator(DomesticCatDecorator):
     def play_cute(self):
         print("The kitten [{}] playing so cute!".format(self.get_name()))
 
+
 class WildCatDecorator(CatDecorator):
     def hunt(self):
         print("Wild Cat [{}] is hunting!".format(self.get_name()))
+
 
 class LynxDecorator(WildCatDecorator):
     def hunt(self):
@@ -121,4 +130,3 @@ print("\n")
 lynx_dec = LynxDecorator(new_cat)
 lynx_dec.hunt()
 lynx_dec.hunt_sneaky()
-print("\n")

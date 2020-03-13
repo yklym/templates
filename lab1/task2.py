@@ -20,9 +20,6 @@ class Component(ABC):
     def remove(self, component) -> None:
         pass
 
-    def is_composite(self) -> bool:
-        return False
-
     @abstractmethod
     def inform(self) -> str:
         pass
@@ -50,9 +47,6 @@ class Director(Component):
     def remove(self, component: Component) -> None:
         self._children.remove(component)
         component.parent = None
-
-    def is_composite(self) -> bool:
-        return True
 
     def inform(self) -> str:
         results = []
