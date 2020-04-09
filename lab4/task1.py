@@ -99,7 +99,6 @@ class FMarkState(State):
 
     def __init__(self):
         self._curr_mark = 0
-        print("hello")
     def try_exam(self) -> None:
         print(f"Student failed")
         self._curr_mark = 0

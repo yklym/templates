@@ -65,11 +65,23 @@ class CottonDress(AbstractDress):
 
     def set_temperature_mode(self):
         print("Cotton dress set temperature mode to 65dg")
+def client_code(abstract_class) -> None:
+    """
+    Клиентский код вызывает шаблонный метод для выполнения алгоритма. Клиентский
+    код не должен знать конкретный класс объекта, с которым работает, при
+    условии, что он работает с объектами через интерфейс их базового класса.
+    """
+
+    # ...
+    abstract_class.clean()
+    # ...
 
 if __name__ == "__main__":
     silk = SilkDress()
-    silk.clean()
+    client_code(silk)
     print("_-__--_-_-_-__")
 
     cotton = CottonDress()
-    cotton.clean()
+    client_code(cotton)
+
+
