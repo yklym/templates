@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-
+from custom_exceptions import *
 
 class Worker(ABC):
     _experience = 0
@@ -14,6 +14,25 @@ class Worker(ABC):
     @abstractmethod
     def operation(self) -> str:
         pass
+    @property
+    def _hours_left(self):
+        return self._hours_left
+    @_hours_left.setter
+    def _hours_left(self):
+
+
+    def resolve_task(self, task):
+        self._resolve_junior_part(task)  # base op
+        self._debugging(1)  # Hook
+        self._resolve_middle_part(task)  # base op
+        self._debugging(2)  # Hook
+        self._resolve_senior_part(task) # base op
+        self._debugging(3)  # Hook
+        self._rest() # base operation
+
+        def _rest(self):
+            self._hours_left -= 1
+
 
 
 class JuniorWorker(Worker):
@@ -70,25 +89,3 @@ class SeniorWorkerCreator(WorkerCreator):
 # Obdumoi, yarek. Ty shze hochesh sozdat tyanochku?
 # class Recruiter:
 #     def __init__(self, name):
-
-
-
-
-# def client_code(creator: Worker) -> None:
-#     """
-#     Клиентский код работает с экземпляром конкретного создателя, хотя и через
-#     его базовый интерфейс. Пока клиент продолжает работать с создателем через
-#     базовый интерфейс, вы можете передать ему любой подкласс создателя.
-#     """
-#
-#     print(f"Client: I'm not aware of the creator's class, but it still works.\n"
-#           f"{creator.some_operation()}", end="")
-#
-#
-# if __name__ == "__main__":
-#     print("App: Launched with the ConcreteCreator1.")
-#     client_code(ConcreteCreator1())
-#     print("\n")
-#
-#     print("App: Launched with the ConcreteCreator2.")
-#     client_code(ConcreteCreator2())
