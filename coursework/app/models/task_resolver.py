@@ -1,95 +1,54 @@
-from __future__ import annotations
-from abc import ABC, abstractmethod
-from typing import List
+from models.strategy import Strategy
 
 
-class TaskResolver:
+class SingletonMeta(type):
+    """
+    provides taskresolver's singleton functionality
+    """
+    _instance = None
 
-    def __init__(self, strategy: Strategy) -> None:
-        self._strategy = strategy
+    def __call__(self):
+        if self._instance is None:
+            self._instance = super().__call__()
+        return self._instance
+
+
+class TaskResolver(metaclass=SingletonMeta):
+    """
+    SINGLETON
+    FACADE
+
+    The class wasn't meant to be used as a facade but still it is.
+    By it we hide a lot of difficult code with using strategies. As it happens, some facades
+    doesn't need more than one class object. That's why we will use python metaclass to
+    provide the class with singleton's properties. What is more this perfectly suits for our
+    single-thread upp
+
+    What is more, it works good with chosen framework Flask, 'cause there some global variables
+    we use already and our facade will be one of them
+    """
+
+    def __init__(self) -> None:
+        self._strategy = None
 
     @property
     def strategy(self) -> Strategy:
         return self._strategy
 
+    # As far as we use singleton, the strategies can be changed through the work
     @strategy.setter
-    def strategy(self, strategy: Strategy) -> None:
-        self._strategy = strategy
+    def strategy(self, strategy: Strategy, team=None):
+        if not isinstance(strategy, Strategy):
+            # do smth, idk
+            pass
+
+        if not team:
+            self._strategy = strategy
+
+        self._strategy = strategy(team)
 
     def resolve(self, task) -> None:
-        print(f'Task {task.estimate_list}')
-        # print("Context: Sorting data using the strategy (not sure how it'll do it)")
-        # result = self._strategy.do_algorithm(["a", "b", "c", "d", "e"])
-        # print(",".join(result))
-
-
-class Strategy(ABC):
-
-    @abstractmethod
-    def find_employers(self, task):
-        pass
-
-
-class CheapStrategy(Strategy):
-    def find_employers(self, team) -> List:
-        # Some algo of returning employers
-        pass
-
-
-class OptimalStrategy(Strategy):
-    def find_employers(self, team) -> List:
-        # Some algo of returning employers
-        pass
-
-
-class FastStrategy(Strategy):
-    def find_employers(self, team) -> List:
-        # Some algo of returning employers
-        pass
-
-
-# if __name__ == "__main__":
-#     # Клиентский код выбирает конкретную стратегию и передаёт её в контекст.
-#     # Клиент должен знать о различиях между стратегиями, чтобы сделать
-#     # правильный выбор.
-#
-#     context = Context(ConcreteStrategyA())
-#     print("Client: Strategy is set to normal sorting.")
-#     context.do_some_business_logic()
-#     print()
-#
-#     print("Client: Strategy is set to reverse sorting.")
-#     context.strategy = ConcreteStrategyB()
-#     context.do_some_business_logic()
-
-
-class Command(ABC):
-    @abstractmethod
-    def execute(self) -> None:
-        pass
-
-
-class ChainedCommand(Command):
-    def __init__(self, receiver, task) -> None:
-        self._receiver = receiver
-        self.task = task
-
-    def execute(self) -> None:
-        self._receiver.resolve_task(self._task)
-
-# class Invoker:
-#     _on_start = None
-#     _on_finish = None
-#
-#     def set_on_start(self, command: Command):
-#         self._on_start = command
-#
-#     def set_on_finish(self, command: Command):
-#         self._on_finish = command
-#
-#     def do_something_important(self) -> None:
-#         if isinstance(self._on_start, Command):
-#             self._on_start.execute()
-#
-#         if isinstance(self._on_finish, Command):
-#             self._on_finish.execute()
+        # Check task
+        if not self._strategy:
+            raise Exception("task resolver")
+        self._strategy.resolve_task(task)

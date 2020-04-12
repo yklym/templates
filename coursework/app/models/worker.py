@@ -1,8 +1,16 @@
 from abc import ABC, abstractmethod
+
 from models.custom_exceptions import *
+
+"""
+To understand the code, you should go first to "task_resolver.py" gl hf
+"""
 
 
 class Worker(ABC):
+    """
+    there are abstract workers with something in common
+    """
     _experience = 0
     _salary = 0
     _hours_left = 8
@@ -13,7 +21,7 @@ class Worker(ABC):
         self.photo = photo
 
     @property
-    def _hours_left(self):
+    def hours_left(self):
         return self._hours_left
 
     @_hours_left.setter
@@ -157,6 +165,5 @@ class SeniorWorkerCreator(WorkerCreator):
         return SeniorWorker(name, photo)
 
 # Obdumoi, yarek. Ty shze hochesh sozdat tyanochku?
-# Opredielionno hochu
 # class Recruiter:
 #     def __init__(self, name):
