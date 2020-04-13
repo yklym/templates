@@ -2,17 +2,18 @@ from abc import ABC, abstractmethod
 from typing import List
 
 from models.custom_exceptions import *
+from models.team_decorator import IterableTeamDecorator
 
 
 class Strategy(ABC):
 
     def __init__(self, team):
-        self._team = team
+        self._team = IterableTeamDecorator(team)
         self._employers_list = []
 
     # this method is similar to all the classes
     def resolve_task(self, task):
-        self._find_employers(task)
+        self._find_employees(task)
         first_command = None
         prev_command = None
         # Links all the commands into responsibility chain
@@ -26,23 +27,35 @@ class Strategy(ABC):
 
         first_command.execute(task)
 
+    @abstractmethod
+    def _find_employees(self):
+        pass
+
 
 class CheapStrategy(Strategy):
-    def _find_employers(self) -> List:
-        # Some algo of returning employers
-        pass
+    def _find_employees(self) -> List:
+        self._employers_list
+        # Using iterator
+        for employee in self._team.cheaper_workers_iterator():
+            self._employers_list.append(employee)
 
 
 class OptimalStrategy(Strategy):
-    def _find_employers(self) -> List:
-        # Some algo of returning employers
-        pass
+    def _find_employees(self) -> List:
+        for employee in self._team.optimal_workers_iterator():
+            self._employers_list.append(employee)
 
 
 class FastStrategy(Strategy):
-    def _find_employers(self) -> List:
-        # Some algo of returning employers
-        pass
+    def _find_employees(self) -> List:
+        for employee in self._team.faster_workers_iterator():
+            self._employers_list.append(employee)
+
+
+class EvenStrategy(Strategy):
+    def _find_employees(self):
+        for employee in self._team.tired_workers_iterator():
+            self._employers_list.append(employee)
 
 
 class Command(ABC):
@@ -63,7 +76,7 @@ class ChainedCommand(Command):
     def execute(self, task) -> None:
         try:
             self._receiver.resolve_task(task)
-        except WorkerHasNoTimeException:
+        except WorkerResolvingTaskException:
             if self._next_handler:
                 self._next_handler.execute(task)
             else:

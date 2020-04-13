@@ -11,7 +11,15 @@ class CustomException(Exception):
     pass
 
 
-class WorkerHasNoTimeException(CustomException):
+class WorkerResolvingTaskException(CustomException):
+    pass
+
+
+class WorkerHasNoTimeException(WorkerResolvingTaskException):
+    pass
+
+
+class WorkerCantAccessTaskException(WorkerResolvingTaskException):
     pass
 
 
