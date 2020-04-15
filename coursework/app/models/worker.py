@@ -60,8 +60,10 @@ class Worker(ABC):
 
     def _resolver(self, task, est_type, efficiency_koef: "<1 for more efficient" = 1):
         est_done = 0
+        # Check Access if no access raises error to handle
+        task.add_estimate(est_type, task.estimate_list[est_type], self)
 
-        req_est = task.estimate_list(self)[est_type]
+        req_est = task.estimate_list[est_type]
         try:
             self._reduce_hours_left(req_est * efficiency_koef)
             est_done = req_est
@@ -98,6 +100,10 @@ class JuniorWorker(Worker):
     def _resolve_senior_part(self, task):
         self._resolver(task, "senior", 2)
 
+    @property
+    def position(self):
+        return "junior"
+
 
 class MiddleWorker(Worker):
     """
@@ -120,6 +126,10 @@ class MiddleWorker(Worker):
     def _resolve_senior_part(self, task):
         self._resolver(task, "senior", 1.25)
 
+    @property
+    def position(self):
+        return "middle"
+
 
 class SeniorWorker(Worker):
     _access_level = "senior"
@@ -138,4 +148,7 @@ class SeniorWorker(Worker):
     def _resolve_senior_part(self, task):
         self._resolver(task, "senior", 0.5)
 
+    @property
+    def position(self):
+        return "senior"
 #

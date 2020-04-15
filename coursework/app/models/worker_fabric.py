@@ -4,14 +4,14 @@ from models.worker import JuniorWorker, MiddleWorker, SeniorWorker
 
 
 class WorkerCreator(ABC):
-    @abstractmethod
-    def create_worker(self):
+    @staticmethod
+    def create_worker(name, photo):
         pass
 
 
 class JuniorWorkerCreator(WorkerCreator):
     @staticmethod
-    def create_worker(self, name, photo) -> JuniorWorker:
+    def create_worker(name, photo) -> JuniorWorker:
         return JuniorWorker(name, photo)
 
 
@@ -23,7 +23,7 @@ class MiddleWorkerCreator(WorkerCreator):
 
 class SeniorWorkerCreator(WorkerCreator):
     @staticmethod
-    def create_worker(self, name, photo) -> SeniorWorker:
+    def create_worker(name, photo) -> SeniorWorker:
         return SeniorWorker(name, photo)
 
 # Obdumoi, yarek. Ty shze hochesh sozdat tyanochku?

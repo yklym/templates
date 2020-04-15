@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from models.task import Task
 from models.custom_exceptions import IncompleteTaskBuiltException
 from models.task_proxy import LoggerProxy, WorkerAccessProxy
 
@@ -52,16 +53,15 @@ class AccessTaskBuilder(AbstractTaskBuilder):
         We control the creation of at lest one required field and also provide others
         with default values
         """
+
         if not (self._jun_est or self._middle_est or self._senior_est):
             raise IncompleteTaskBuiltException("Task builder")
 
         self._task.add_estimate("junior", self._jun_est)
         self._task.add_estimate("middle", self._middle_est)
         self._task.add_estimate("senior", self._senior_est)
-
-        if not len(self._access_level):
-            self.set_access_level_junior()
-
+        # if not len(self._access_level):
+        #     self.set_access_level_junior()
         self._task.set_access_level(self._access_level)
         task = self._task
 

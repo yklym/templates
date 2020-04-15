@@ -5,9 +5,9 @@ class Task:
     the class we are building in builder below
     """
 
-    def __init__(self, access_level_list) -> None:
-        self._access_level = access_level_list
-        self._estimate_list = []
+    def __init__(self) -> None:
+        self._access_level = ["junior"]
+        self._estimate_dict = {}
         self.estimate = 0
 
     @property
@@ -19,7 +19,7 @@ class Task:
 
     @property
     def estimate_list(self):
-        return self._estimate_list
+        return self._estimate_dict
 
     def add_estimate(self, key, value) -> None:
-        self._estimate_list[key] = value;
+        self._estimate_dict[key] = value

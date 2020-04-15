@@ -1,0 +1,13 @@
+#collapseForm {
+    max-width: 80%;
+    margin: 20px auto;
+}
+
+#workersTable table {
+    max-width: 80%;
+    margin: 20px auto;
+
+    border: 1px solid lightgrey;
+}
+
+

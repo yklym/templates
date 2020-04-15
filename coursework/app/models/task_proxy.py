@@ -1,5 +1,5 @@
 from models.task import Task
-from models.task import Task
+from models.custom_exceptions import WorkerResolvingTaskException
 
 
 class Proxy(Task):
@@ -10,6 +10,17 @@ class Proxy(Task):
     # incapsulating method
     def set_access_level(self, access_level):
         pass
+
+    @property
+    def access_level(self):
+        return self._real_subject.access_level
+
+    @property
+    def estimate_list(self):
+        return self._real_subject.estimate_list
+
+    def add_estimate(self, key, value) -> None:
+        self._real_subject.add_estimate(key, value)
 
 
 class LoggerProxy(Proxy):
@@ -26,7 +37,7 @@ class LoggerProxy(Proxy):
 
 class WorkerAccessProxy(Proxy):
     @property
-    def estimate_list(self, worker):
+    def add_estimate(self, key, value, worker):
         if worker.access_level not in self._real_subject.access_level:
             raise WorkerResolvingTaskException
-        return self._real_subject._estimate_list
+        return self._real_subject.add_estimate(key, value)
