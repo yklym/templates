@@ -1,7 +1,9 @@
 html body {
     background-color: rgba(78, 251, 44, 0.19);
 }
-
+h2 {
+    text-align: center;
+}
 main {
     width: 1200px;
     min-height: 800px;
@@ -23,6 +25,12 @@ td {
 table {
     max-width: 80%;
     margin: 50px auto;
+    border: 1px solid lightgray;
+}
+table a{
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
 }
 
 code {
@@ -37,7 +45,7 @@ code {
 }
 
 .adminPanel {
-    border: 1px solid lightgrey;
+    /*border: 1px solid lightgrey;*/
     padding: 10px;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -65,5 +73,22 @@ code {
     margin: 10px;
 }
 
+a.btn:not([href]){
+    color: white;
+}
 
+a.deleteTableElementAnchor:not([href]){
+    color: red;
+    font-weight: bold;
+}
 
+form{
+    padding: 30px;
+    border: 1px solid lightgrey;
+}
+
+.collapseButtons {
+    padding: 30px;
+    margin: 20px auto;
+    border: 1px solid lightgrey;
+}

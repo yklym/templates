@@ -12,20 +12,28 @@ class Worker(ABC):
     there are abstract workers with something in common
     """
     _experience = 0
-    _hours_left = 8
+    _hours_amount = 8
     _access_level = ""
 
     def __init__(self, name: str, photo: str):
         self.name = name
         self.photo = photo
+        self._hours_left = self._hours_amount
 
     @property
     def hours_left(self):
         return self._hours_left
 
     @property
+    def experience(self):
+        return self._experience
+
+    @property
     def access_level(self):
         return self._access_level
+
+    def refresh(self):
+        self._hours_left = self._hours_amount
 
     def _reduce_hours_left(self, val):
 
@@ -92,7 +100,7 @@ class JuniorWorker(Worker):
     for stack overflow
     """
     _access_level = "junior"
-    _hours_left = 10
+    _hours_amount = 10
 
     def _resolve_middle_part(self, task):
         self._resolver(task, "middle", 1.5)
@@ -111,7 +119,7 @@ class MiddleWorker(Worker):
     and some req parts of template method
     """
     _access_level = "middle"
-    _hours_left = 8
+    _hours_amount = 8
 
     def _resolve_senior_part(self, task):
         self._resolver(task, "senior", 2)
@@ -133,7 +141,7 @@ class MiddleWorker(Worker):
 
 class SeniorWorker(Worker):
     _access_level = "senior"
-    _hours_left = 6
+    _hours_amount = 6
 
     def _debugging(self, hours):
         if hours >= 2:

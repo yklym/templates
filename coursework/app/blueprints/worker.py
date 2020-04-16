@@ -3,8 +3,7 @@ from flask import request
 from storage import teams_dict
 from flask_cors import CORS, cross_origin
 
-from models.team import Team
-from models.worker_fabric import WorkerCreator, JuniorWorkerCreator, MiddleWorkerCreator, SeniorWorkerCreator
+from models.worker_fabric import JuniorWorkerCreator, MiddleWorkerCreator, SeniorWorkerCreator
 
 worker_blueprint = Blueprint('worker_api', __name__, )
 
@@ -38,3 +37,19 @@ def create_worker():
 
     return make_response(jsonify(""), 201)
 
+
+@worker_blueprint.route('/api/worker/<string:worker_name>', methods=['DELETE'])
+@cross_origin()
+def delete_worker(worker_name):
+
+    if not request.json:
+        return make_response(jsonify({'err': "Not json format"}), 400)
+
+    request_body = request.json
+
+    team_name = request_body["teamName"]
+    worker_position = request_body["position"]
+
+    teams_dict[team_name].delete_worker(worker_name, worker_position)
+
+    return make_response("", 200)

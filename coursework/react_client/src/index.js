@@ -6,8 +6,10 @@ import App from './App';
 import HeaderComponent from "./components/partials/HeaderComponent";
 
 ReactDOM.render(
-    <BrowserRouter>
+    <div>
         <HeaderComponent/>
-        <App/>
-    </BrowserRouter>
+        <BrowserRouter>
+            <App/>
+        </BrowserRouter>
+    </div>
     , document.getElementById('root'));

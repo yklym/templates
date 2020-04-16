@@ -76,3 +76,26 @@ class OptimalWorkersIterator(AbstractWorkersIterator):
             self._employers_list.extend(seniors_list)
 
         self._position = 0
+
+
+class ExperiencedWorkersIterator(AbstractWorkersIterator):
+
+    def __init__(self, team_collection, reverse=False):
+        self._employers_list = []
+        juniors_list = team_collection["junior"]
+        middles_list = team_collection["middle"]
+        seniors_list = team_collection["senior"]
+
+        if isinstance(juniors_list, list):
+            juniors_list.sort(key=lambda worker: worker.experience, reverse=reverse)
+            self._employers_list.extend(juniors_list)
+
+        if isinstance(middles_list, list):
+            middles_list.sort(key=lambda worker: worker.experience, reverse=reverse)
+            self._employers_list.extend(middles_list)
+
+        if isinstance(seniors_list, list):
+            seniors_list.sort(key=lambda worker: worker.experience, reverse=reverse)
+            self._employers_list.extend(seniors_list)
+
+        self._position = 0

@@ -5,7 +5,7 @@ task_builder = AccessTaskBuilder()
 task_builder.set_junior_est(5)
 task_builder.set_middle_est(4)
 task_builder.set_senior_est(3)
-task_builder.set_access_level_junior()
+task_builder.set_access_level("junior")
 
 # task_builder.built_task
 

@@ -1,56 +1,58 @@
 import React from "react";
-import {serverApi} from "../../../config"
+import {serverApi} from "../../../config";
 
-class WorkersTableComponent extends React.Component{
+class WorkersTableComponent extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state={
-            workers : [],
-        }
     }
 
-    componentDidMount() {
-        this.fetchContent();
-    }
-
-     fetchContent = () => {
-        fetch(`http://${serverApi}/api/team/${this.props.teamName}`, {
-            method: 'GET', // или 'PUT'
+    deleteWorker = (teamName, workerName, position)=>{
+      fetch(`http://${serverApi}/api/worker/${workerName}`, {
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            body : JSON.stringify({
+                "teamName" : teamName,
+                "workerName" : workerName,
+                "position" : position,
+            })
         }).then(res => {
-            if(res.status !== 200){
-                return new Promise.reject("error code");
+            if (res.status === 200) {
+                this.props.updateParent();
+            } else {
+                console.log(res);
             }
-            return res.json();
-        }).then(parsedJson => {
-            this.setState({workers: parsedJson});
         }).catch(e => {
             console.log(e);
         })
     };
 
     createRows = () => {
-        console.log(this.state)
-        return this.state.workers.map(worker => {
+        return this.props.workers.map(worker => {
             return (
                 <tr key={worker.workerName}>
-                    <td scope="col">
-                            {worker.workerName}
+                    <td>
+                        {worker.workerName}
                     </td>
-                    <td scope="col">
-                            {worker.position}
+                    <td>
+                        {worker.position}
                     </td>
-                    <td scope="col">
-                            {worker.hoursLeft}
+                    <td>
+                        {worker.experience}
+                    </td>
+                    <td>
+                        {worker.hoursLeft}
+                    </td>
+                    <td>
+                        <button className="btn btn-danger" onClick={() => this.deleteWorker(this.props.teamName, worker.workerName, worker.position )}>Delete</button>
                     </td>
                 </tr>);
         });
     }
 
     render() {
+
         return (
             <div id={"workersTable"}>
                 <table className="table table-hover">
@@ -58,7 +60,9 @@ class WorkersTableComponent extends React.Component{
                     <tr>
                         <td>Worker Name</td>
                         <td>Position</td>
+                        <td>Experience</td>
                         <td>Hours left</td>
+                        <td>Delete worker</td>
                     </tr>
                     </thead>
 

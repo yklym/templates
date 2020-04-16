@@ -19,18 +19,18 @@ class AbstractTaskBuilder(ABC):
 
     @property
     def built_task(self) -> None:
+        return None
+
+    @abstractmethod
+    def set_junior_est(self, val: int) -> None:
         pass
 
     @abstractmethod
-    def set_junior_est(self) -> None:
+    def set_middle_est(self, val: int) -> None:
         pass
 
     @abstractmethod
-    def set_middle_est(self) -> None:
-        pass
-
-    @abstractmethod
-    def set_senior_est(self) -> None:
+    def set_senior_est(self, val: int) -> None:
         pass
 
 
@@ -46,6 +46,10 @@ class AccessTaskBuilder(AbstractTaskBuilder):
 
     def reset(self) -> None:
         self._task = Task()
+        self._jun_est = 0
+        self._middle_est = 0
+        self._senior_est = 0
+        self._access_level = []
 
     @property
     def built_task(self) -> Task:
@@ -60,8 +64,7 @@ class AccessTaskBuilder(AbstractTaskBuilder):
         self._task.add_estimate("junior", self._jun_est)
         self._task.add_estimate("middle", self._middle_est)
         self._task.add_estimate("senior", self._senior_est)
-        # if not len(self._access_level):
-        #     self.set_access_level_junior()
+
         self._task.set_access_level(self._access_level)
         task = self._task
 
@@ -77,14 +80,15 @@ class AccessTaskBuilder(AbstractTaskBuilder):
     def set_senior_est(self, val: int) -> None:
         self._senior_est = val
 
-    def set_access_level_junior(self):
-        self._access_level = ["junior", "middle", "senior"]
-
-    def set_access_level_middle(self):
-        self._access_level = ["middle", "senior"]
-
-    def set_access_level_middle(self):
-        self._access_level = ["senior"]
+    def set_access_level(self, access_level):
+        if access_level.lower() == "junior":
+            self._access_level = ["junior", "middle", "senior"]
+        elif access_level.lower() == "middle":
+            self._access_level = ["middle", "senior"]
+        elif access_level.lower() == "senior":
+            self._access_level = ["senior"]
+        else:
+            raise IncompleteTaskBuiltException
 
 
 """

@@ -1,48 +1,60 @@
 import React from "react";
+
 import {serverApi} from "../../../config"
 
-class TasksTableComponent extends React.Component{
+class TasksResolutionTable extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            tasks : []
+        }
     }
-    deleteTask = (taskName)=>{
-        fetch(`http://${serverApi}/api/task/${taskName}`, {
-            method: 'DELETE',
+
+    componentDidMount() {
+        this.fetchTasks();
+    }
+
+    fetchTasks = () => {
+        fetch(`http://${serverApi}/api/task`, {
+            method: 'GET', // или 'PUT'
             headers: {
                 'Content-Type': 'application/json'
             }
         }).then(res => {
-            if (res.status === 200) {
-                this.props.updateTable();
-            } else {
-                console.log(res);
+            if (res.status !== 200) {
+                return new Promise.reject("error code");
             }
+            return res.json();
+        }).then(parsedJson => {
+            this.setState({tasks: parsedJson});
         }).catch(e => {
             console.log(e);
         })
     };
 
     createRows = () => {
-        return this.props.tasks.map(task => {
+        return this.state.tasks.map(task => {
             return (
                 <tr key={task.taskName}>
                     <td>
-                            {task.taskName}
+                        {task.taskName}
                     </td>
                     <td>
-                            {task.juniorEst}
+                        {task.juniorEst}
                     </td>
                     <td>
-                            {task.middleEst}
+                        {task.middleEst}
                     </td>
                     <td>
-                            {task.seniorEst}
+                        {task.seniorEst}
                     </td>
                     <td>
-                            {task.accessLevel}
+                        {task.accessLevel}
                     </td>
                     <td>
-                            <button className="btn btn-danger" onClick={()=>this.deleteTask(task.taskName)}>Delete task</button>
+                        {/*ONCLICK*/}
+                        <button className="btn btn-warning">Resolve task</button>
                     </td>
                 </tr>);
         });
@@ -59,12 +71,12 @@ class TasksTableComponent extends React.Component{
                         <td>Middle Estimate</td>
                         <td>Senior Estimate</td>
                         <td>Access level</td>
-                        <td>Delete task</td>
+                        <td>Resolve task</td>
                     </tr>
                     </thead>
 
                     <tbody>
-                        {this.createRows()}
+                    {this.createRows()}
                     </tbody>
 
                 </table>
@@ -73,4 +85,4 @@ class TasksTableComponent extends React.Component{
     }
 }
 
-export default TasksTableComponent;
+export default TasksResolutionTable;

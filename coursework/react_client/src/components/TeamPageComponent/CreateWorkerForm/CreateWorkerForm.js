@@ -25,8 +25,9 @@ class CreateWorkerForm extends React.Component{
                 'Content-Type': 'application/json'
             }
         }).then(res => {
-            if (res.status === 200){
+            if (res.status === 201){
                 //IF All good
+                console.log(this.props)
                 this.props.updateTable();
             }
         }).catch(e => {

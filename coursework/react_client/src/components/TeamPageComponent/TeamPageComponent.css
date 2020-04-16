@@ -10,4 +10,11 @@
     border: 1px solid lightgrey;
 }
 
+#taskResolutionTable {
+    max-width: 90%;
+    margin: 20px auto;
+
+}
+#taskResolutionTable table {
+}
 

@@ -22,4 +22,4 @@ class Task:
         return self._estimate_dict
 
     def add_estimate(self, key, value) -> None:
-        self._estimate_dict[key] = value
+        self._estimate_dict[key] = int(value)

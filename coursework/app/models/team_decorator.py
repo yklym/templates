@@ -1,7 +1,8 @@
 from abc import ABC
 from collections.abc import Iterable
 
-from models.team_iterators import OptimalWorkersIterator, FasterWorkersIterator, CheaperWorkersIterator
+from models.team_iterators import OptimalWorkersIterator, FasterWorkersIterator, CheaperWorkersIterator, \
+    ExperiencedWorkersIterator
 
 
 class TeamDecorator(ABC, Iterable):
@@ -43,6 +44,12 @@ class IterableTeamDecorator(TeamDecorator):
 
     def cheaper_workers_iterator(self):
         return CheaperWorkersIterator(self._team.workers)
+
+    def more_experienced_workers_iterator(self):
+        return ExperiencedWorkersIterator(self._team.workers)
+
+    def less_experienced_workers_iterator(self):
+        return ExperiencedWorkersIterator(self._team.workers, reverse=True)
 
     # Default iterator for iterable classes or ones inherited from standard "Iterable" class
     def __iter__(self):

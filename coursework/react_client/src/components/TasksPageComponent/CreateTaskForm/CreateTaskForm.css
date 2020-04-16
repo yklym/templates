@@ -1,0 +1,14 @@
+.form-group.estimateInputs{
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-group.estimateInputs input[type="range"]{
+    max-width: 60%;
+}
+
+.form-group.estimateInputs input[name="juniorEst"][type="number"] {
+    max-width: 30%;
+}
+
+
