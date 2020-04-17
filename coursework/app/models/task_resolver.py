@@ -1,4 +1,5 @@
-from models.strategy import Strategy
+from models.strategy import *
+from models.custom_exceptions import *
 
 
 class SingletonMeta(type):
@@ -28,27 +29,44 @@ class TaskResolver(metaclass=SingletonMeta):
     we use already and our facade will be one of them
     """
 
-    def __init__(self) -> None:
-        self._strategy = None
+    _strategy = None
 
-    @property
-    def strategy(self) -> Strategy:
-        return self._strategy
-
-    # As far as we use singleton, the strategies can be changed through the work
-    @strategy.setter
-    def strategy(self, strategy: Strategy, team=None):
-        if not isinstance(strategy, Strategy):
-            # do smth, idk
+    def _run_strategy(self, task):
+        ret_dict = {
+            "err": ""
+        }
+        try:
+            if not self._strategy:
+                raise Exception("task resolver")
+            print("In task Resolver _run")
+            self._strategy.resolve_task(task)
+        except CantBeResolvedByTeamException:
+            # TODO catch exceptions
+            print("err in task resolver")
+            ret_dict["err"] = f'Task cant be resolved by team'
             pass
+        except Exception as e:
+            ret_dict["err"] = e
+            raise e
 
-        if not team:
-            self._strategy = strategy
+        return ret_dict
 
-        self._strategy = strategy(team)
+    def resolve(self, task, team, mode="fast"):
+        mode = mode.lower()
 
-    def resolve(self, task) -> None:
-        # Check task
-        if not self._strategy:
-            raise Exception("task resolver")
-        self._strategy.resolve_task(task)
+        if mode == "fast":
+            self._strategy = FastStrategy(team)
+        elif mode == "cheap":
+            self._strategy = CheapStrategy(team)
+        elif mode == "optimal":
+            self._strategy = OptimalStrategy(team)
+        elif mode == "favourite":
+            self._strategy = FavouriteStrategy(team)
+        elif mode == "tired":
+            self._strategy = TiredWorkersStrategy(team)
+        elif mode == "equal":
+            self._strategy = EqualityStrategy(team)
+        else:
+            self._strategy = None
+
+        return self._run_strategy(task)

@@ -55,7 +55,7 @@ class TasksPageComponent extends React.Component {
                             <a className="btn btn-secondary" data-toggle="collapse" role="button"
                                aria-expanded="false" aria-controls="collapseForm"
                                onClick={() => this.setState({openForm: !this.state.openForm})}>
-                                Create worker
+                                Create task
                             </a>
                         </p>
 

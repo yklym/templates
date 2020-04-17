@@ -123,7 +123,7 @@ class TeamPageComponent extends React.Component {
 
                     <h3> Task resolving</h3>
 
-                    <TasksResolutionTable/>
+                    <TasksResolutionTable teamName={this.state.teamName} updateParent={this.fetchContent}/>
 
                 </section>
             </main>

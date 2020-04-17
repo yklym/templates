@@ -25,10 +25,17 @@ class Proxy(Task):
 
 class LoggerProxy(Proxy):
     _history = []
+    def __init__(self, real_subject: Task):
+        self._history = []
+        super().__init__(real_subject)
 
     def add_estimate(self, key, value, worker):
-        self._history.append(f"Worker {worker.name} set [{key}] task to [{value}]")
-        self._real_subject.add_stimate(key, value)
+        if not worker:
+            print("It's not a worker")
+            # self._real_subject.add_estimate(key, value)
+        else:
+            self._history.append(f"Worker {worker.name} set [{key}] estimate to [{value}]")
+            self._real_subject.add_estimate(key, value)
 
     @property
     def changes_log(self):
@@ -36,8 +43,20 @@ class LoggerProxy(Proxy):
 
 
 class WorkerAccessProxy(Proxy):
-    @property
     def add_estimate(self, key, value, worker):
-        if worker.access_level not in self._real_subject.access_level:
+
+        if not worker or worker.access_level not in self._real_subject.access_level:
+            print("access denied")
             raise WorkerResolvingTaskException
-        return self._real_subject.add_estimate(key, value)
+        print("access granted")
+        if value == -1:
+            print("Just a check")
+            return True
+        return self._real_subject.add_estimate(key, value, worker)
+
+    @property
+    def changes_log(self):
+        if self._real_subject.changes_log:
+            return self._real_subject.changes_log
+        else:
+            return " "

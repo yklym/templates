@@ -12,9 +12,8 @@ worker_blueprint = Blueprint('worker_api', __name__, )
 @cross_origin()
 def create_worker():
     req_body = request.json
-    print(req_body)
     team_name = req_body["teamName"]
-    print(teams_dict)
+
     if team_name not in teams_dict:
         return make_response(jsonify({"err": "no team"}), 400)
 
@@ -31,8 +30,7 @@ def create_worker():
         print("compare Error")
         return make_response(jsonify({"err": "wrong position field"}), 400)
 
-    print(worker_fabric)
-    new_worker = worker_fabric.create_worker(req_body["workerName"], "-")
+    new_worker = worker_fabric.create_worker(req_body["workerName"])
     teams_dict[team_name].add(worker_position, new_worker)
 
     return make_response(jsonify(""), 201)
@@ -41,7 +39,6 @@ def create_worker():
 @worker_blueprint.route('/api/worker/<string:worker_name>', methods=['DELETE'])
 @cross_origin()
 def delete_worker(worker_name):
-
     if not request.json:
         return make_response(jsonify({'err': "Not json format"}), 400)
 

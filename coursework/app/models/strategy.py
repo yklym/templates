@@ -1,23 +1,30 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from models.custom_exceptions import *
+from models.command import ChainedCommand
 from models.team_decorator import IterableTeamDecorator
 
 
 class Strategy(ABC):
 
     def __init__(self, team):
+        print("Created Strategy")
         self._team = IterableTeamDecorator(team)
         self._employers_list = []
 
-    # this method is similar to all the classes
+    # this method is the same in all the classes
     def resolve_task(self, task):
-        self._find_employees(task)
+        try:
+            self._find_employees()
+        except Exception:
+            print("find employees exception")
+        print("STRATEGY-----------")
+        print(self._employers_list)
         first_command = None
         prev_command = None
         # Links all the commands into responsibility chain
         for employer in self._employers_list:
+            print(employer.name)
             new_command = ChainedCommand(employer)
             if prev_command:
                 prev_command.set_next(new_command)
@@ -34,7 +41,6 @@ class Strategy(ABC):
 
 class CheapStrategy(Strategy):
     def _find_employees(self) -> List:
-        self._employers_list
         # Using iterator
         for employee in self._team.cheaper_workers_iterator():
             self._employers_list.append(employee)
@@ -52,32 +58,21 @@ class FastStrategy(Strategy):
             self._employers_list.append(employee)
 
 
-class EvenStrategy(Strategy):
+class TiredWorkersStrategy(Strategy):
     def _find_employees(self):
         for employee in self._team.tired_workers_iterator():
             self._employers_list.append(employee)
 
 
-class Command(ABC):
-    @abstractmethod
-    def execute(self) -> None:
-        pass
+class FavouriteStrategy(Strategy):
+    def _find_employees(self):
+        for employee in self._team.more_experienced_workers_iterator():
+            self._employers_list.append(employee)
 
 
-class ChainedCommand(Command):
-    def __init__(self, receiver) -> None:
-        self._receiver = receiver
-        self._next_handler = None
+class EqualityStrategy(Strategy):
+    def _find_employees(self):
+        for employee in self._team.less_experienced_workers_iterator():
+            self._employers_list.append(employee)
 
-    def set_next(self, next_handler):
-        self._next_handler = next_handler
-        return next_handler
 
-    def execute(self, task) -> None:
-        try:
-            self._receiver.resolve_task(task)
-        except WorkerResolvingTaskException:
-            if self._next_handler:
-                self._next_handler.execute(task)
-            else:
-                raise CantBeResolvedByTeamException(f'in ChainedCommand with worker {self._receiver.name}')

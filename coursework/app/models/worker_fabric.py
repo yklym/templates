@@ -5,26 +5,32 @@ from models.worker import JuniorWorker, MiddleWorker, SeniorWorker
 
 class WorkerCreator(ABC):
     @staticmethod
-    def create_worker(name, photo):
+    def create_worker(name):
         pass
 
 
 class JuniorWorkerCreator(WorkerCreator):
     @staticmethod
-    def create_worker(name, photo) -> JuniorWorker:
-        return JuniorWorker(name, photo)
+    def create_worker(name) -> JuniorWorker:
+        return JuniorWorker(name)
 
 
 class MiddleWorkerCreator(WorkerCreator):
     @staticmethod
-    def create_worker(name, photo) -> MiddleWorker:
-        return MiddleWorker(name, photo)
+    def create_worker(name) -> MiddleWorker:
+        return MiddleWorker(name)
 
 
 class SeniorWorkerCreator(WorkerCreator):
     @staticmethod
-    def create_worker(name, photo) -> SeniorWorker:
-        return SeniorWorker(name, photo)
+    def create_worker(name) -> SeniorWorker:
+        return SeniorWorker(name)
+# OR
+
+class WorkersFabric:
+    def create_junior(self, name):
+        return JuniorWorker(name)
+
 
 # Obdumoi, yarek. Ty shze hochesh sozdat tyanochku?
 # class Recruiter:

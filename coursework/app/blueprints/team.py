@@ -73,3 +73,4 @@ def refresh_team(team_name):
 
     teams_dict[team_name].refresh_workers()
     return make_response("", 200)
+

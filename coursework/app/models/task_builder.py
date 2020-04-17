@@ -69,7 +69,7 @@ class AccessTaskBuilder(AbstractTaskBuilder):
         task = self._task
 
         self.reset()
-        return LoggerProxy(WorkerAccessProxy(task))
+        return WorkerAccessProxy(LoggerProxy(task))
 
     def set_junior_est(self, val: int) -> None:
         self._jun_est = val

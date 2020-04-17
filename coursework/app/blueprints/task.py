@@ -1,10 +1,12 @@
 from flask import Blueprint, abort, jsonify, json, make_response
 from flask import request
-from storage import teams_dict, tasks_dict
 from flask_cors import cross_origin
 
+from storage import teams_dict, tasks_dict
+from models.task_resolver import TaskResolver
 from models.task_builder import AccessTaskBuilder
-from models.team_decorator import IterableTeamDecorator
+
+task_resolver = TaskResolver()
 
 task_blueprint = Blueprint('task_api', __name__, )
 
@@ -17,13 +19,14 @@ def get_tasks():
     for task_name in tasks_dict:
         tmp_task = tasks_dict[task_name]
         est_dict = tmp_task.estimate_list
-
+        print(tmp_task.changes_log)
         ret_obj = {
             "taskName": task_name,
             "juniorEst": est_dict["junior"],
             "middleEst": est_dict["middle"],
             "seniorEst": est_dict["senior"],
-            "accessLevel": tmp_task.access_level[0]
+            "accessLevel": tmp_task.access_level[0],
+            "log": "\n".join(tmp_task.changes_log)
         }
         return_list.append(ret_obj)
     return make_response(jsonify(return_list), 200)
@@ -58,9 +61,29 @@ def create_task():
 @task_blueprint.route('/api/task/<string:task_name>', methods=['DELETE'])
 @cross_origin()
 def delete_task(task_name):
-    print("deleting task" + " " + task_name)
     if task_name not in tasks_dict:
         abort(400)
 
     del tasks_dict[task_name]
     return make_response("", 200)
+
+
+@task_blueprint.route('/api/resolveTask/<string:task_name>', methods=['POST'])
+@cross_origin()
+def resolve_task(task_name):
+    if (task_name not in tasks_dict) or (not request.json):
+        abort(400)
+
+    request_body = request.json
+
+    response_obj = task_resolver.resolve(tasks_dict[task_name],
+                                         teams_dict[request_body["team"]],
+                                         request_body["mode"])
+
+    if response_obj["err"]:
+        print(response_obj)
+        return make_response(jsonify(response_obj), 200)  # status 204 - NO CONTENT
+    else:
+        log = "\n".join(tasks_dict[task_name].changes_log)
+        del tasks_dict[task_name]
+        return make_response(jsonify({"log": log}), 200)
